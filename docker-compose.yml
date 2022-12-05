@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  nginx: 
+    image: gilgledson/nodejs-app:latest
+    build: 
+      context: nginx
+    networks:
+      - nodejs-app-network
+    ports:
+      - 3000:80
+  nodejs-app:
+    image: gilgledson/nodejs-nginx:latest
+    build: 
+      context: .
+    networks:
+      - nodejs-app-network
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0 
+    container_name: db
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./init_database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - nodejs-app-network
+
+networks:
+  nodejs-app-network:
+    driver: bridge
