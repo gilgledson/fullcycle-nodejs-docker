@@ -23,7 +23,7 @@ services:
     tty: true
     volumes:
       - ./mysql:/var/lib/mysql
-      - ./init_database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./schema:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
